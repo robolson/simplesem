@@ -1,0 +1,111 @@
+grammar SimpleSem
+  include Arithmetic
+  
+  rule statement
+    set_stmt / jump_stmt / jumpt_stmt / halt
+  end
+  
+  rule halt
+    'halt' {
+      def execute(env={})
+        throw "halt!"
+      end
+    }
+  end
+  
+  rule set_stmt
+    set_stmt_assign / set_stmt_write / set_stmt_read
+  end
+
+  rule set_stmt_assign
+    'set' space location:expression comma value:expression {
+      def execute(env)
+        env.data[location.eval(env)] = value.eval(env)
+      end
+    }
+  end
+  
+  rule set_stmt_write
+    'set' space 'write' comma expression {
+      def execute(env)
+        puts expression.eval(env)
+      end
+    }
+  end
+  
+  rule set_stmt_read
+    'set' space expression comma 'read' {
+      def execute(env)
+        print "input: "
+        env.data[expression.eval(env)] = gets.strip.to_i
+      end  
+    }
+  end
+  
+  rule jump_stmt
+    'jump' space loc:expression {
+      def execute(env)
+        env.pc = loc.eval(env)
+      end
+    }
+  end
+  
+  rule jumpt_stmt
+    'jumpt' space loc:expression comma comparative {
+      def execute(env)
+        if comparative.eval(env)
+          env.pc = loc.eval(env)
+        end
+      end
+    }
+  end
+  
+  rule expression
+    data_lookup / number
+  end
+  
+  rule primary
+    data_lookup
+    /
+    number
+    /
+    '(' space arithmetic_expression space ')' {
+      def eval(env={})
+        arithmetic_expression.eval(env)
+      end
+    }
+  end
+  
+  rule data_lookup
+    'D[' expression ']' {
+      def eval(env)
+        env.data[expression.eval(env)]
+      end
+    }
+  end
+  
+  rule number
+    ([1-9] [0-9]* / '0') {
+      def eval(env={})
+        text_value.to_i
+      end
+    }
+  end
+  
+  rule pc
+    'pc' / 'ip' {
+      def eval(env)
+        env.pc
+      end
+    }
+  end
+  
+  rule comma
+    space ',' space
+  end
+  
+  rule space
+    ' '*
+  end
+  
+end

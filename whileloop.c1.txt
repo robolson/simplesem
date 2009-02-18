@@ -1,0 +1,11 @@
+set 0, read
+jumpt 5, D[0] = 1
+jumpt 7, D[0] = 2
+jumpt 9, D[0] = 3
+halt
+set 1, 1
+jump 4
+set 1, 2 
+jump 4
+set 1, 3
+jump 4
