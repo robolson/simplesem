@@ -9,6 +9,10 @@ class SimpleSemProgram
   attr_reader :code
   attr_accessor :data, :pc
   
+  # Create a SimpleSemProgram instance
+  # Params:
+  #   (String)filepath: path to SimpleSem source file.
+  #       Optional because it's useful to use in tests without needing to load a file
   def initialize filepath=nil
     @code = Array.new
     if filepath
@@ -29,20 +33,12 @@ class SimpleSemProgram
     loop do
       @pc += 1
       instruction = @code[@pc-1]
-      # puts "'#{instruction}'"
       begin
         @parser.parse(instruction).execute(self)
       rescue
         puts "program halted"
         break
       end
-    end
-  end
-  
-  def inspect_data
-    puts "DATA:"
-    @data.each_with_index do |item, index|
-      puts "#{index}: #{item}"
     end
   end
 end

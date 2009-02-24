@@ -37,7 +37,7 @@ grammar SimpleSem
     'set' space expression comma 'read' {
       def execute(env)
         print "input: "
-        env.data[expression.eval(env)] = gets.strip.to_i
+        env.data[expression.eval(env)] = $stdin.gets.strip.to_i
       end  
     }
   end

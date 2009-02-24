@@ -12,12 +12,12 @@ class SimpleSemParserTest < Test::Unit::TestCase
   def setup
     @parser = SimpleSemParser.new
     @ssp = SimpleSemProgram.new
+    @ssp.data[0] = 1
   end
   
   def test_set_stmt_assign
-    @ssp.data[0] = 2
     parse('set 1, D[0]').execute(@ssp)
-    assert_equal [2, 2], @ssp.data
+    assert_equal [1, 1], @ssp.data
   end
   
   def test_set_stmt_write
@@ -27,20 +27,28 @@ class SimpleSemParserTest < Test::Unit::TestCase
   def test_jump_stmt
     parse('jump 5').execute(@ssp)
     assert_equal 5, @ssp.pc
-    
-    @ssp.data[0] = 1
+  end
+  
+  def test_jump_to_data_loc
     parse('jump D[0]').execute(@ssp)
     assert_equal 1, @ssp.pc
   end
   
-  def test_jumpt_stmt
-    @ssp.data[0] = 2
+  def test_jumpt_stmt_true
+    @ssp.data[0] = 1
     parse('jumpt 5, D[0]=D[0]').execute(@ssp)
     assert_equal 5, @ssp.pc
+  end
     
-    @ssp.data[1] = 3
-    parse('jumpt 6, D[0]=D[1]').execute(@ssp)
-    assert_equal 5, @ssp.pc   # pc should have changed
+  def test_jumpt_stmt_false
+    @ssp.data[0] = 1
+    parse('jumpt 5, D[0]=2').execute(@ssp)
+    assert_equal 0, @ssp.pc   # pc should not have changed
+  end
+  
+  def test_comparisons
+    parse('jumpt 5, D[0] > 0').execute(@ssp)
+    assert_equal 5, @ssp.pc    
   end
   
 end

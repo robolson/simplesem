@@ -8,7 +8,33 @@ grammar Arithmetic
   end
   
   rule comparison_op
-    equality_op / inequality_op
+    equality_op 
+    / 
+    inequality_op
+    /
+    '>' {
+      def apply(a, b)
+        a > b
+      end
+    }
+    /
+    '<' {
+      def apply(a, b)
+        a < b
+      end
+    }
+    /
+    '>=' {
+      def apply(a, b)
+        a >= b
+      end
+    }
+    /
+    '<=' {
+      def apply(a, b)
+        a <= b
+      end
+    }
   end
   
   rule equality_op
