@@ -18,7 +18,7 @@ grammar SimpleSem
   end
 
   rule set_stmt_assign
-    'set' space location:expression comma value:expression {
+    'set' space location:primary comma value:primary {
       def execute(env)
         env.data[location.eval(env)] = value.eval(env)
       end
@@ -65,29 +65,17 @@ grammar SimpleSem
   end
   
   rule primary
+    arithmetic_expression
+    /
     data_lookup
     /
     number
-    /
-    '(' space arithmetic_expression space ')' {
-      def eval(env={})
-        arithmetic_expression.eval(env)
-      end
-    }
   end
   
   rule data_lookup
-    'D[' expression ']' {
+    'D[' primary ']' {
       def eval(env)
-        env.data[expression.eval(env)]
-      end
-    }
-  end
-  
-  rule number
-    ([1-9] [0-9]* / '0') {
-      def eval(env={})
-        text_value.to_i
+        env.data[primary.eval(env)]
       end
     }
   end
@@ -102,10 +90,6 @@ grammar SimpleSem
   
   rule comma
     space ',' space
-  end
-  
-  rule space
-    ' '*
   end
   
 end

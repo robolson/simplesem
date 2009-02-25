@@ -1,16 +1,24 @@
 grammar Arithmetic  
   rule arithmetic_expression
-    comparative / additive
+    comparative / additive / multitive
   end
   
   rule comparative
-    operand_1:additive space operator:comparison_op space operand_2:additive <BinaryOperation>
+    operand_1:expression space operator:comparison_op space operand_2:expression <BinaryOperation>
   end
   
   rule comparison_op
-    equality_op 
-    / 
-    inequality_op
+    '>=' {
+      def apply(a, b)
+        a >= b
+      end
+    }
+    /
+    '<=' {
+      def apply(a, b)
+        a <= b
+      end
+    }
     /
     '>' {
       def apply(a, b)
@@ -24,20 +32,12 @@ grammar Arithmetic
       end
     }
     /
-    '>=' {
+    '!=' {
       def apply(a, b)
-        a >= b
+        a != b
       end
     }
     /
-    '<=' {
-      def apply(a, b)
-        a <= b
-      end
-    }
-  end
-  
-  rule equality_op
     '=' {
       def apply(a, b)
         a == b
@@ -45,20 +45,8 @@ grammar Arithmetic
     }
   end
   
-  rule inequality_op
-    '!=' {
-      def apply(a, b)
-        a != b
-      end
-    }
-  end
-  
   rule additive
-    operand_1:multitive
-    space operator:additive_op space
-    operand_2:additive <BinaryOperation>
-    /
-    multitive
+    operand_1:expression space operator:additive_op space operand_2:expression <BinaryOperation>
   end
   
   rule additive_op
@@ -76,11 +64,7 @@ grammar Arithmetic
   end
 
   rule multitive
-    operand_1:primary
-    space operator:multitive_op space
-    operand_2:multitive <BinaryOperation>
-    /
-    primary
+    operand_1:expression space operator:multitive_op space operand_2:expression <BinaryOperation>
   end
   
   rule multitive_op
@@ -96,19 +80,9 @@ grammar Arithmetic
       end
     }
   end  
-  
-  rule primary
-    number
-    /
-    '(' space arithmetic_expression space ')' {
-      def eval(env={})
-        arithmetic_expression.eval(env)
-      end
-    }
-  end
 
   rule number
-    ([1-9] [0-9]* / '0') {
+    ('-'? [1-9] [0-9]* / '0') {
       def eval(env={})
         text_value.to_i
       end

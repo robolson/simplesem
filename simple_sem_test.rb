@@ -29,9 +29,26 @@ class SimpleSemParserTest < Test::Unit::TestCase
     assert_equal 5, @ssp.pc
   end
   
+  def test_set_to_data_loc
+    parse('set D[0], 2').execute(@ssp)
+    assert_equal 2, @ssp.data[1]
+  end
+  
+  def test_set_w_advanced_expr
+    @ssp.data[1] = 2
+    parse('set 2, D[1]+D[0]').execute(@ssp)
+    assert_equal 3, @ssp.data[2]
+  end
+  
+  def test_set_increment_instr
+    parse('set 0, D[0]+1').execute(@ssp)
+    assert_equal 2, @ssp.data[0]
+  end
+  
   def test_jump_to_data_loc
+    @ssp.data[0] = 2
     parse('jump D[0]').execute(@ssp)
-    assert_equal 1, @ssp.pc
+    assert_equal 2, @ssp.pc
   end
   
   def test_jumpt_stmt_true
@@ -46,9 +63,27 @@ class SimpleSemParserTest < Test::Unit::TestCase
     assert_equal 0, @ssp.pc   # pc should not have changed
   end
   
-  def test_comparisons
+  def test_comparison_greater_than
     parse('jumpt 5, D[0] > 0').execute(@ssp)
     assert_equal 5, @ssp.pc    
+  end
+  
+  def test_comparison_greater_than
+    parse('jumpt 5, D[0] < 0').execute(@ssp)
+    assert_equal 0, @ssp.pc    
+    
+    parse('jumpt 5, D[0] < 2').execute(@ssp)
+    assert_equal 5, @ssp.pc
+  end
+  
+  def test_comparison_greater_than_or_eql
+    parse('jumpt 5, 0 <= D[0]').execute(@ssp)
+    assert_equal 5, @ssp.pc    
+  end
+  
+  def test_negative_number
+    parse('set 0, -1').execute(@ssp)
+    assert_equal -1, @ssp.data[0]
   end
   
 end
