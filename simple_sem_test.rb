@@ -45,6 +45,15 @@ class SimpleSemParserTest < Test::Unit::TestCase
     assert_equal 2, @ssp.data[0]
   end
   
+  def test_instruction_pointer
+    # run two dummy instructions, manually incrementing the program counter
+    @ssp.pc = 1
+    parse('set 0, 0').execute(@ssp)
+    @ssp.pc = 2
+    parse('set 0, ip').execute(@ssp)
+    assert_equal 2, @ssp.data[0]  # check that the parser was able to read the ip correctly
+  end
+  
   def test_jump_to_data_loc
     @ssp.data[0] = 2
     parse('jump D[0]').execute(@ssp)

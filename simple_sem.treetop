@@ -61,11 +61,13 @@ grammar SimpleSem
   end
   
   rule expression
-    data_lookup / number
+    ip / data_lookup / number
   end
   
   rule primary
     arithmetic_expression
+    /
+    ip
     /
     data_lookup
     /
@@ -80,8 +82,8 @@ grammar SimpleSem
     }
   end
   
-  rule pc
-    'pc' / 'ip' {
+  rule ip
+    'ip' {
       def eval(env)
         env.pc
       end
