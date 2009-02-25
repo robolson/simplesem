@@ -45,6 +45,13 @@ class SimpleSemParserTest < Test::Unit::TestCase
     assert_equal 2, @ssp.data[0]
   end
   
+  def test_nested_data_lookup
+    @ssp.data[0] = 0
+    @ssp.data[1] = 1
+    parse('set 2, D[D[0]+1]').execute(@ssp)
+    assert_equal 1, @ssp.data[2]
+  end
+  
   def test_instruction_pointer
     # run two dummy instructions, manually incrementing the program counter
     @ssp.pc = 1
@@ -72,20 +79,26 @@ class SimpleSemParserTest < Test::Unit::TestCase
     assert_equal 0, @ssp.pc   # pc should not have changed
   end
   
-  def test_comparison_greater_than
-    parse('jumpt 5, D[0] > 0').execute(@ssp)
-    assert_equal 5, @ssp.pc    
-  end
-  
-  def test_comparison_greater_than
+  def test_less_than_comparison
+    # test a jumpt that returns false
     parse('jumpt 5, D[0] < 0').execute(@ssp)
-    assert_equal 0, @ssp.pc    
+    assert_not_equal 5, @ssp.pc    
     
     parse('jumpt 5, D[0] < 2').execute(@ssp)
     assert_equal 5, @ssp.pc
   end
   
-  def test_comparison_greater_than_or_eql
+  def test_greater_than_comparison
+    parse('jumpt 5, D[0] > 0').execute(@ssp)
+    assert_equal 5, @ssp.pc    
+  end
+  
+  def test_greater_than_or_eql_comparison
+    parse('jumpt 5, 1 >= D[0]').execute(@ssp)
+    assert_equal 5, @ssp.pc    
+  end
+  
+  def test_less_than_or_eql_comparison
     parse('jumpt 5, 0 <= D[0]').execute(@ssp)
     assert_equal 5, @ssp.pc    
   end

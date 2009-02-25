@@ -8,7 +8,7 @@ grammar SimpleSem
   rule halt
     'halt' {
       def execute(env={})
-        throw "halt!"
+        raise ProgramHalt
       end
     }
   end
