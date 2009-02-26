@@ -33,12 +33,11 @@ class SimpleSemProgram
     
     @pc = 0
     loop do
-      @pc += 1
-      instruction = @code[@pc-1]
+      instruction = @code[@pc]  # fetch
+      @pc += 1                  # increment
       begin
-        @parser.parse(instruction).execute(self)
+        @parser.parse(instruction).execute(self)  # decode and execute
       rescue ProgramHalt
-        puts "program halted"
         break
       end
     end

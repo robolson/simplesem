@@ -31,6 +31,12 @@ grammar SimpleSem
         puts expression.eval(env)
       end
     }
+    /
+    'set' space 'write' comma '"' string:(!'"' . )* '"' {
+      def execute(env)
+        puts string.text_value
+      end
+    }
   end
   
   rule set_stmt_read

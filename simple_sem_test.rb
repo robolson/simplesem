@@ -21,7 +21,7 @@ class SimpleSemParserTest < Test::Unit::TestCase
   end
   
   def test_set_stmt_write
-    assert_nil parse('set write, 1').execute(@ssp)
+    assert_nil parse('set write, "hello world!"').execute(@ssp)
   end
   
   def test_jump_stmt
@@ -108,4 +108,9 @@ class SimpleSemParserTest < Test::Unit::TestCase
     assert_equal -1, @ssp.data[0]
   end
   
+  def test_halt
+    assert_raise ProgramHalt do
+      parse('halt').execute(@ssp)
+    end
+  end
 end
