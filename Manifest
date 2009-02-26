@@ -1,0 +1,16 @@
+README.textile
+Rakefile
+bin/simplesem
+lib/simplesem/arithmetic.treetop
+lib/simplesem/arithmetic_node_classes.rb
+lib/simplesem/simple_sem.treetop
+lib/simplesem/simplesem_program.rb
+lib/simplesem.rb
+sample_programs/case-statement.txt
+sample_programs/gcd.txt
+sample_programs/test-ip.txt
+sample_programs/while-loop.txt
+simplesem.tmproj
+test/simplesem_test.rb
+test/test_helper.rb
+Manifest

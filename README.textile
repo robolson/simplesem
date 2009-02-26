@@ -18,7 +18,7 @@ Install the simplesem gem with:
 
 Execute a SIMPLESEM program using the simplesem command. Pass the filename of the SIMLESEM source file as an argument.
 
-  $ simplesem source_file.txt
+  $ simplesem simplesem_file.txt
 
 h2. Introduction to SIMPLESEM
 

@@ -1,10 +1,7 @@
 dir = File.dirname(__FILE__)
 require File.expand_path("#{dir}/test_helper")
-require File.expand_path("#{dir}/simple_sem_program")
-require File.expand_path("#{dir}/arithmetic_node_classes")
-
-Treetop.load File.expand_path("#{dir}/arithmetic")
-Treetop.load File.expand_path("#{dir}/simple_sem")
+libdir = dir + "/../lib"
+require File.expand_path("#{libdir}/simplesem")
 
 class SimpleSemParserTest < Test::Unit::TestCase
   include ParserTestHelper

@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
+require 'simplesem'
+
+if ARGV.empty?
+  puts "Usage:\n\nsimplesem simplesem_file.txt\n\n"
+  exit
+end
+
+ssp = SimpleSemProgram.new(ARGV.shift)
+ssp.run
+
+puts "\nDATA: " + ssp.data.inspect
