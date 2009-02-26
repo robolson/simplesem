@@ -1,0 +1,12 @@
+set 0, read               // first number 'n'
+set 1, read               // second number 'm'
+set 2, ip + 1             // return pointer for call to GCD
+jump 6
+set write, D[0]           // print the GCD
+halt
+jumpt D[2], D[0] = D[1]   // while(m != n)
+jumpt 10, D[1] < D[0]     // if(m < n)
+set 1, D[1]-D[0]
+jump 11
+set 0, D[0]-D[1]
+jump 6

@@ -1,0 +1,14 @@
+set 0, 4
+set 1, 1
+set 2, -1
+jumpt 10, D[0] <= D[2]
+jumpt 7, D[0] != 0
+set write, D[1]
+jump 8
+set 1, D[1]+D[0]
+set 0, D[0] - 1
+jump 3
+set write, D[0]
+set write, D[1]
+set write, D[2]
+halt
