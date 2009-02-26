@@ -1,0 +1,132 @@
+h1. SIMPLESEM Interpreter
+
+h2. Description
+
+Interpreter for the SIMPLESEM language.
+
+SIMPLESEM is used in the CS141 Programming Languages course taught by "Professor Shannon Tauro":http://www.ics.uci.edu/~stauro/ at UC Irvine. This Rubygem was created out of my desire to execute SIMPLESEM programs. To my knowledge, there are none publicly available.
+
+This interpreter utilizes Nathan Sobo's "Treetop":http://github.com/nathansobo/treetop gem to create a parsing expression grammar for parsing SIMPLESEM commands.  
+
+h2. Installation and Usage
+
+Install the simplesem gem with:
+
+  $ sudo gem install robolson-simplesem
+
+Execute a SIMPLESEM program using the simplesem command. Pass the filename of the SIMLESEM source file as an argument.
+
+  $ simplesem source_file.txt
+
+h2. Introduction to SIMPLESEM
+
+SIMPLESEM is an abstract semantic processor that is based on the Von Neumann model of the fetch-execute cycle.
+
+h3. SIMPLESEM Instructions
+
+h4. SET
+
+The @set@ command is used to modify the value stored in a cell. It takes two parameters: the address of the cell whose contents is to be set, and the expression evaluating the new value.
+
+Evaluate the expression (4 * 2) and places the result into location 0:
+
+<code>
+  set 0, 4 * 2
+</code>
+
+Assign the value stored at location 0 into location 2:
+
+<code>
+  set 2, D[0]
+</code>
+
+h4. Input/Output with SET
+
+The @set@ command is also used to print to the screen and to get input from the user, through the special registers @read@ and @write@.
+
+Print the value stored at location 0:
+
+<code>
+  set write, D[0]
+</code>
+
+Get input from the user and store it at location 1:
+
+<code>
+set 0, read
+</code>
+
+h4. JUMP
+
+The @jump@ command performs and unconditional jump to the line number specified.
+
+Jump program execution to the address at location 0:
+
+<code>
+  jump D[0]
+</code>
+
+h4. JUMPT
+
+The @jumpt@ command (pronounced jump-true), is a conditional jump. It only jumps if the expression given is true.
+
+Jump to line 7 if the value at <notextile>D[1]</notextile> is equal to the value at <notextile>D[0]</notextile>:
+
+<code>
+  jumpt 7, D[1] = D[0]
+</code>
+
+SIMPLESEM supports all the common comparison operators: >, <, >=, <=, !=, and =. Take note that the equality operator is a single '=' sign, not the usual '=='.
+
+h3. Slightly More Advanced Features of SIMPLESEM
+
+h4. Nested Data Lookups
+
+SIMPLESEM supports nesting expressions inside of the address location for accessing the data array. This statement looks up the value at location 0, adds 1 to it, then uses the result as the address of another data lookup. If <notextile>D[0]</notextile> contains the value 9--this statement will set location 5 with the value at location 10.
+
+<code>
+  set 5, D[D[0]+1]
+</code>  
+
+h4. Indirect Addressing
+
+Assigns the value stored at location 15 into the cell whose address is the value stored at location 10:
+
+<code>
+  set D[10], D[15]
+</code>
+
+h4. Using The Instruction Pointer Variable
+
+At any point you can use the @ip@ placeholder in your code and it will evaluate to the current value of the instruction pointer, also known as the program counter. The ip is always 1 greater than the current line number because in the fetch-execute cycle the processor increments the ip after fetching the next instruction and executing it.
+
+The following program will output the text "hello world!" five times and than exit. It uses the @ip@ variable to jump execution back to the @set write@ statement.
+
+<code><pre>
+  set 0, 0
+  set write, "hello world!"
+  set 0, D[0]+1
+  jumpt ip-3, D[0] < 5
+  halt
+</pre></code>
+
+h3. Sample SIMPLESEM Program
+
+The following SIMPLESEM program calculates the "GCD":http://en.wikipedia.org/wiki/Greatest_common_divisor of two numbers. The program prompts the user to enter the two numbers when the program is executed. This program is also included in the @sample_programs@ folder.
+
+<code><pre>
+  set 0, read               // first number 'n'
+  set 1, read               // second number 'm'
+  set 2, ip + 1             // return pointer for call to GCD
+  jump 8
+  set write, D[0]           // print the GCD
+  halt
+  jumpt D[2], D[0] = D[1]   // while(m != n)
+  jumpt 12, D[1] < D[0]     // if(m < n)
+  set 1, D[1]-D[0]
+  jump 13
+  set 0, D[0]-D[1]
+  jump 8
+</pre></code>
+
+
