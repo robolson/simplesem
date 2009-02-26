@@ -4,6 +4,8 @@ h2. Description
 
 Interpreter for the SIMPLESEM language.
 
+Author: "Rob Olson":http://thinkingdigitally.com
+
 SIMPLESEM is used in the CS141 Programming Languages course taught by "Professor Shannon Tauro":http://www.ics.uci.edu/~stauro/ at UC Irvine. This Rubygem was created out of my desire to execute SIMPLESEM programs. To my knowledge, there are none publicly available.
 
 This interpreter utilizes Nathan Sobo's "Treetop":http://github.com/nathansobo/treetop gem to create a parsing expression grammar for parsing SIMPLESEM commands.  
@@ -94,6 +96,14 @@ Assigns the value stored at location 15 into the cell whose address is the value
 
 <code>
   set D[10], D[15]
+</code>
+
+h4. Complex Math Expressions
+
+SIMPLESEM supports standard mathematical order of operations. The following statement sets location 1 to 14 as expected:
+
+<code>
+  set 1, 2+3*4
 </code>
 
 h4. Using The Instruction Pointer Variable

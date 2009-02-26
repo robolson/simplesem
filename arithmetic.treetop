@@ -1,10 +1,10 @@
 grammar Arithmetic  
-  rule arithmetic_expression
-    comparative / additive / multitive
+  rule expression
+    comparative / additive
   end
   
   rule comparative
-    operand_1:expression space operator:comparison_op space operand_2:expression <BinaryOperation>
+    operand_1:additive space operator:comparison_op space operand_2:additive <BinaryOperation>
   end
   
   rule comparison_op
@@ -46,7 +46,9 @@ grammar Arithmetic
   end
   
   rule additive
-    operand_1:expression space operator:additive_op space operand_2:expression <BinaryOperation>
+    operand_1:multitive space operator:additive_op space operand_2:additive <BinaryOperation>
+    /
+    multitive
   end
   
   rule additive_op
@@ -64,7 +66,9 @@ grammar Arithmetic
   end
 
   rule multitive
-    operand_1:expression space operator:multitive_op space operand_2:expression <BinaryOperation>
+    operand_1:primary space operator:multitive_op space operand_2:multitive <BinaryOperation>
+    /
+    primary
   end
   
   rule multitive_op

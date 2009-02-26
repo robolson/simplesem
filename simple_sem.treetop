@@ -18,9 +18,9 @@ grammar SimpleSem
   end
 
   rule set_stmt_assign
-    'set' space location:primary comma value:primary {
+    'set' space loc:additive comma value:additive {
       def execute(env)
-        env.data[location.eval(env)] = value.eval(env)
+        env.data[loc.eval(env)] = value.eval(env)
       end
     }
   end
@@ -40,16 +40,16 @@ grammar SimpleSem
   end
   
   rule set_stmt_read
-    'set' space expression comma 'read' {
+    'set' space loc:additive comma 'read' {
       def execute(env)
         print "input: "
-        env.data[expression.eval(env)] = $stdin.gets.strip.to_i
+        env.data[loc.eval(env)] = $stdin.gets.strip.to_i
       end  
     }
   end
   
   rule jump_stmt
-    'jump' space loc:expression {
+    'jump' space loc:additive {
       def execute(env)
         env.pc = loc.eval(env)
       end
@@ -57,33 +57,33 @@ grammar SimpleSem
   end
   
   rule jumpt_stmt
-    'jumpt' space loc:expression comma comparative {
+    'jumpt' space loc:additive comma expression {
       def execute(env)
-        if comparative.eval(env)
+        if expression.eval(env)
           env.pc = loc.eval(env)
         end
       end
     }
   end
   
-  rule expression
-    ip / data_lookup / number
-  end
-  
   rule primary
-    arithmetic_expression
-    /
     ip
     /
     data_lookup
     /
     number
+    /
+    '(' space expression space ')' {
+      def eval(env={})
+        expression.eval(env)
+      end
+    }
   end
   
   rule data_lookup
-    'D[' primary ']' {
+    'D[' expr:additive ']' {
       def eval(env)
-        env.data[primary.eval(env)]
+        env.data[expr.eval(env)]
       end
     }
   end

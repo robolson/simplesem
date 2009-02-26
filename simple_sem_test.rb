@@ -34,10 +34,16 @@ class SimpleSemParserTest < Test::Unit::TestCase
     assert_equal 2, @ssp.data[1]
   end
   
-  def test_set_w_advanced_expr
+  def test_complex_expr
     @ssp.data[1] = 2
-    parse('set 2, D[1]+D[0]').execute(@ssp)
-    assert_equal 3, @ssp.data[2]
+    parse('set 2, D[0]+D[1]*2').execute(@ssp)
+    assert_equal 5, @ssp.data[2]
+  end
+  
+  def test_parenthesis
+    @ssp.data[1] = 2
+    parse('set 2, (D[0]+D[1])*2').execute(@ssp)
+    assert_equal 6, @ssp.data[2]
   end
   
   def test_set_increment_instr
