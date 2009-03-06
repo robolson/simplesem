@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rake'
 require 'echoe'
 
-Echoe.new('simplesem', '0.1.0') do |p|
+Echoe.new('simplesem', '0.1.1') do |p|
   p.description         = "SIMPLESEM Interpreter"
   p.url                 = "http://github.com/robolson/simplesem"
   p.author              = "Rob Olson"
