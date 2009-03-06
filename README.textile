@@ -1,12 +1,12 @@
 h1. SIMPLESEM Interpreter
 
+Author: "Rob Olson":http://thinkingdigitally.com
+
 h2. Description
 
 Interpreter for the SIMPLESEM language.
 
-Author: "Rob Olson":http://thinkingdigitally.com
-
-SIMPLESEM is used in the CS141 Programming Languages course taught by "Professor Shannon Tauro":http://www.ics.uci.edu/~stauro/ at UC Irvine. This Rubygem was created out of my desire to execute SIMPLESEM programs. To my knowledge, there are none publicly available.
+SIMPLESEM is used in the CS141 Programming Languages course taught by Professor "Shannon Tauro":http://www.ics.uci.edu/~stauro/ at UC Irvine. This Rubygem was created out of my desire to execute SIMPLESEM programs. To my knowledge, there are none publicly available.
 
 This interpreter utilizes Nathan Sobo's "Treetop":http://github.com/nathansobo/treetop gem to create a parsing expression grammar for parsing SIMPLESEM commands.  
 
@@ -66,6 +66,13 @@ Jump to line 7 if the value at <notextile>D[1]</notextile> is equal to the value
 
 SIMPLESEM supports all the common comparison operators: >, <, >=, <=, !=, and =. Take note that the equality operator is a single '=' sign, not the usual '=='.
 
+h3. Comments
+
+SIMPLESEM comments begin with two forward slashes. Everything on the line following @//@ is considered a comment and is ignored by the interpreter. *Important*: Comments still consume line numbers! Keep this in mind when writing jump statements.
+
+  // This is line number 0.
+  set write, "foo"  // a comment after a statement
+
 h2. Slightly More Advanced Features of SIMPLESEM
 
 h3. Nested Data Lookups
@@ -119,4 +126,12 @@ set 0, D[0]-D[1]
 jump 8
 </code></pre>
 
+<pre>
+$ simplesem sample_programs/gcd.txt 
+input: 15
+input: 35
+5
+
+DATA: [5, 5, 4]
+</pre>
 
