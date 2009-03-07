@@ -17,8 +17,18 @@ class SimpleSemParserTest < Test::Unit::TestCase
     assert_equal [1, 1], @ssp.data
   end
   
-  def test_set_stmt_write
-    assert_nil parse('set write, "hello world!"').execute(@ssp)
+  def test_set_stmt_write_string
+    out = InternalPuts.capture do
+      parse('set write, "Hello World!"').execute(@ssp)
+    end
+    assert_equal "Hello World!\n", out
+  end
+  
+  def test_set_stmt_write_expr
+    out = InternalPuts.capture do
+      parse('set write, 2 > 1').execute(@ssp)
+    end
+    assert_equal "true\n", out
   end
   
   def test_jump_stmt
@@ -56,12 +66,10 @@ class SimpleSemParserTest < Test::Unit::TestCase
   end
   
   def test_instruction_pointer
-    # run two dummy instructions, manually incrementing the program counter
+    # manually incrementing the program counter is required here
     @ssp.pc = 1
-    parse('set 0, 0').execute(@ssp)
-    @ssp.pc = 2
     parse('set 0, ip').execute(@ssp)
-    assert_equal 2, @ssp.data[0]  # check that the parser was able to read the ip correctly
+    assert_equal 1, @ssp.data[0]  # check that the parser was able to evaluate ip correctly
   end
   
   def test_jump_to_data_loc

@@ -16,3 +16,22 @@ module ParserTestHelper
     result
   end
 end
+
+class InternalPuts
+  attr_reader :out
+  
+  def self.capture 
+    $stdout = instance = new
+    yield
+    $stdout = STDOUT
+    return instance.out
+  end
+  
+  def initialize
+    @out = String.new
+  end
+  
+  def write(str) 
+    @out << str
+  end 
+end
