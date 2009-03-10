@@ -17,21 +17,12 @@ module ParserTestHelper
   end
 end
 
-class InternalPuts
-  attr_reader :out
-  
-  def self.capture 
-    $stdout = instance = new
+module Kernel
+  def capture_stdout
+    out = StringIO.new
+    $stdout = out
     yield
     $stdout = STDOUT
-    return instance.out
+    return out
   end
-  
-  def initialize
-    @out = String.new
-  end
-  
-  def write(str) 
-    @out << str
-  end 
 end

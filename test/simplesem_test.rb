@@ -18,17 +18,17 @@ class SimpleSemParserTest < Test::Unit::TestCase
   end
   
   def test_set_stmt_write_string
-    out = InternalPuts.capture do
+    out = capture_stdout do
       parse('set write, "Hello World!"').execute(@ssp)
     end
-    assert_equal "Hello World!\n", out
+    assert_equal "Hello World!\n", out.string
   end
   
   def test_set_stmt_write_expr
-    out = InternalPuts.capture do
+    out = capture_stdout do
       parse('set write, 2 > 1').execute(@ssp)
     end
-    assert_equal "true\n", out
+    assert_equal "true\n", out.string
   end
   
   def test_jump_stmt
