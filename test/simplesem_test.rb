@@ -9,12 +9,12 @@ class SimpleSemParserTest < Test::Unit::TestCase
   def setup
     @parser = SimpleSemParser.new
     @ssp = SimpleSemProgram.new
-    @ssp.data[0] = 1
+    @ssp.data[0] = [1]
   end
   
   def test_set_stmt_assign
     parse('set 1, D[0]').execute(@ssp)
-    assert_equal [1, 1], @ssp.data
+    assert_equal [[1], [1]], @ssp.data
   end
   
   def test_set_stmt_write_string
@@ -31,6 +31,17 @@ class SimpleSemParserTest < Test::Unit::TestCase
     assert_equal "true\n", out.string
   end
   
+  def test_set_stmt_read
+    fake_in = StringIO.new("2\n3\n")
+    $stdin = fake_in
+    
+    capture_stdout do     # capture_stdout because we do not want "input:"'s in the test output
+      parse('set 1, read').execute(@ssp)
+      parse('set 1, read').execute(@ssp)
+    end
+    assert_equal [2, 3], @ssp.data[1]
+  end
+  
   def test_jump_stmt
     parse('jump 5').execute(@ssp)
     assert_equal 5, @ssp.pc
@@ -38,54 +49,54 @@ class SimpleSemParserTest < Test::Unit::TestCase
   
   def test_set_to_data_loc
     parse('set D[0], 2').execute(@ssp)
-    assert_equal 2, @ssp.data[1]
+    assert_equal 2, @ssp.data[1].last
   end
   
   def test_complex_expr
-    @ssp.data[1] = 2
+    @ssp.data[1] = [2]
     parse('set 2, D[0]+D[1]*2').execute(@ssp)
-    assert_equal 5, @ssp.data[2]
+    assert_equal 5, @ssp.data[2].last
   end
   
   def test_parenthesis
-    @ssp.data[1] = 2
+    @ssp.data[1] = [2]
     parse('set 2, (D[0]+D[1])*2').execute(@ssp)
-    assert_equal 6, @ssp.data[2]
+    assert_equal 6, @ssp.data[2].last
   end
   
   def test_set_increment_instr
     parse('set 0, D[0]+1').execute(@ssp)
-    assert_equal 2, @ssp.data[0]
+    assert_equal 2, @ssp.data[0].last
   end
   
   def test_nested_data_lookup
-    @ssp.data[0] = 0
-    @ssp.data[1] = 1
+    @ssp.data[0] = [0]
+    @ssp.data[1] = [1]
     parse('set 2, D[D[0]+1]').execute(@ssp)
-    assert_equal 1, @ssp.data[2]
+    assert_equal 1, @ssp.data[2].last
   end
   
   def test_instruction_pointer
     # manually incrementing the program counter is required here
     @ssp.pc = 1
     parse('set 0, ip').execute(@ssp)
-    assert_equal 1, @ssp.data[0]  # check that the parser was able to evaluate ip correctly
+    assert_equal 1, @ssp.data[0].last  # checking that the parser was able to evaluate ip correctly
   end
   
   def test_jump_to_data_loc
-    @ssp.data[0] = 2
+    @ssp.data[0] = [2]
     parse('jump D[0]').execute(@ssp)
     assert_equal 2, @ssp.pc
   end
   
   def test_jumpt_stmt_true
-    @ssp.data[0] = 1
+    @ssp.data[0] = [1]
     parse('jumpt 5, D[0]=D[0]').execute(@ssp)
     assert_equal 5, @ssp.pc
   end
     
   def test_jumpt_stmt_false
-    @ssp.data[0] = 1
+    @ssp.data[0] = [1]
     parse('jumpt 5, D[0]=2').execute(@ssp)
     assert_equal 0, @ssp.pc   # pc should not have changed
   end
@@ -116,7 +127,7 @@ class SimpleSemParserTest < Test::Unit::TestCase
   
   def test_negative_number
     parse('set 0, -1').execute(@ssp)
-    assert_equal -1, @ssp.data[0]
+    assert_equal -1, @ssp.data[0].last
   end
   
   def test_halt

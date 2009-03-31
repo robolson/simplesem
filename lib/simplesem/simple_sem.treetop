@@ -20,7 +20,13 @@ grammar SimpleSem
   rule set_stmt_assign
     'set' space loc:additive comma value:additive {
       def execute(env)
-        env.data[loc.eval(env)] = value.eval(env)
+        evaled_loc = loc.eval(env)
+        evaled_value = value.eval(env)
+        if env.data[evaled_loc].nil?
+            env.data[evaled_loc] = Array[evaled_value]
+        else
+            env.data[evaled_loc] << evaled_value
+        end
       end
     }
   end
@@ -43,7 +49,15 @@ grammar SimpleSem
     'set' space loc:additive comma 'read' {
       def execute(env)
         print "input: "
-        env.data[loc.eval(env)] = $stdin.gets.strip.to_i
+        
+        evaled_loc = loc.eval(env)
+        input_value = $stdin.gets.strip.to_i
+        
+        if env.data[evaled_loc].nil?
+            env.data[evaled_loc] = Array[input_value]
+        else
+            env.data[evaled_loc] << input_value
+        end
       end  
     }
   end
@@ -83,7 +97,7 @@ grammar SimpleSem
   rule data_lookup
     'D[' expr:additive ']' {
       def eval(env)
-        env.data[expr.eval(env)]
+        env.data[expr.eval(env)].last
       end
     }
   end
