@@ -1,15 +1,55 @@
 #!/usr/bin/env ruby
+#= Overview
+#
+# Interpreter for the SIMPLESEM language
+#
+#= Usage
+#
+# simplesem [-t|-v] filename
+# 
+# Options:
+#   -h    Print this message
+#   -t    Print Data array on exit
+#   -v    Print Data array with change history on exit. Supersedes -t 
+#         if it is also specified.
+#
+
 require 'rubygems'
+require 'rdoc/usage'
+require 'getoptlong'
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 require 'simplesem'
 
-if ARGV.empty?
-  puts "Usage:\n\nsimplesem simplesem_file.txt\n\n"
-  exit
+opts = GetoptLong.new(
+  [ '-h', '--help', GetoptLong::NO_ARGUMENT ],
+  [ '-t', GetoptLong::NO_ARGUMENT ],
+  [ '-v', GetoptLong::NO_ARGUMENT ]
+)
+
+verbosity = 0   # by default do not print what is in Data
+
+opts.each do |opt, arg|
+  case opt
+    when '-h'
+      RDoc::usage
+    when '-t'
+      verbosity = 1
+    when '-v'
+      verbosity = 2
+  end
+end
+
+if ARGV.length != 1
+  puts "Missing filename argument (try --help)"
+  exit 0
 end
 
 ssp = SimpleSemProgram.new(ARGV.shift)
 ssp.run
 
-puts "\nDATA: " + ssp.data.inspect
+if (verbosity == 1)
+  puts "\nDATA: \n" + ssp.inspect_data
+elsif (verbosity == 2)
+  puts "\nDATA: \n" + ssp.inspect_data_with_history
+end

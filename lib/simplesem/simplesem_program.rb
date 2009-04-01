@@ -42,4 +42,16 @@ class SimpleSemProgram
       end
     end
   end
+  
+  def inspect_data
+    res = String.new
+    @data.each_with_index {|loc, i| res += "#{i}: #{loc.last}\n" }
+    res
+  end
+  
+  def inspect_data_with_history
+    res = String.new
+    @data.each_with_index {|loc, i| res += "#{i}: #{loc.inspect}\n" }
+    res
+  end
 end

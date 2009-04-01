@@ -6,7 +6,7 @@ h2. Description
 
 Interpreter for the SIMPLESEM language.
 
-SIMPLESEM is used in the CS141 Programming Languages course taught by Professor "Shannon Tauro":http://www.ics.uci.edu/~stauro/ at UC Irvine. This Rubygem was created out of my desire to execute SIMPLESEM programs. To my knowledge, there are none publicly available.
+SIMPLESEM is used in the CS141 Programming Languages course taught by Professor "Shannon Tauro":http://www.ics.uci.edu/~stauro/ at UC Irvine. This Rubygem was created out of my desire to execute SIMPLESEM programs.
 
 This interpreter utilizes Nathan Sobo's "Treetop":http://github.com/nathansobo/treetop gem to create a parsing expression grammar for parsing SIMPLESEM commands.  
 
@@ -19,6 +19,16 @@ Install the simplesem gem with:
 Execute a SIMPLESEM program using the simplesem command. Pass the filename of the SIMLESEM source file as an argument.
 
   $ simplesem simplesem_file.txt
+
+h3. Command Line Options
+
+The simplesem executable accepts a couple command line options which will display the values in the Data array at the time the program exits.
+
+  -h    Print help message
+  -t    Print Data array on exit
+  -v    Print Data array with change history on exit. Supersedes -t if it is also specified.
+
+Use -t if you only want to see the ending value at each position in the Data array, otherwise use -v to see each data location's history. If neither -t or -v is used the program will not display the data array.
 
 h2. Introduction to SIMPLESEM
 
@@ -127,11 +137,14 @@ jump 8
 </code></pre>
 
 <pre>
-$ simplesem sample_programs/gcd.txt 
+$ simplesem -v sample_programs/gcd.txt 
 input: 15
 input: 35
 5
 
-DATA: [5, 5, 4]
+DATA: 
+0: [15, 10, 5]
+1: [35, 20, 5]
+2: [4]
 </pre>
 
