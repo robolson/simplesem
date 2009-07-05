@@ -1,0 +1,17 @@
+bin/simplesem
+test/test_helper.rb
+test/simplesem_test.rb
+sample_programs/case-statement.txt
+sample_programs/while-loop.txt
+sample_programs/gcd.txt
+sample_programs/hello-world.txt
+simplesem.gemspec
+LICENSE
+Rakefile
+lib/simplesem.rb
+lib/simplesem/arithmetic_node_classes.rb
+lib/simplesem/arithmetic.treetop
+lib/simplesem/simple_sem.treetop
+lib/simplesem/simplesem_program.rb
+README.textile
+Manifest

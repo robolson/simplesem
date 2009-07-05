@@ -9,5 +9,3 @@ Echoe.new('simplesem', '0.1.3') do |p|
   p.email               = "rko618@gmail.com"
   p.runtime_dependencies = ["treetop >=1.2.4"]
 end
-
-Dir["#{File.dirname(__FILE__)}/tasks/*.rake"].sort.each { |ext| load ext }
