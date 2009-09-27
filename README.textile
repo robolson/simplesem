@@ -22,13 +22,13 @@ bc. $ simplesem simplesem_file.txt
 
 h3. Command Line Options
 
-The simplesem executable accepts a couple command line options which will display the values in the Data array at the time the program exits.
+The simplesem executable accepts a couple optional command line options which will display the values in the Data array at the time the program exits.
 
-pre.  -h    Print help message
-  -t    Print Data array on exit
-  -v    Print Data array with change history on exit. Supersedes -t if it is also specified.
+pre.  --help              Print help message
+  --inspect           Print values in the data array on exit
+  --inspect-history   Print values in the data array with change history on exit
 
-Use -t if you only want to see the ending value at each position in the Data array, otherwise use -v to see each data location's history. If neither -t or -v is used the program will not display the data array.
+Use @--inspect@ if you only want to see the ending value at each position in the Data array, otherwise use @--inspect-history@ to see each data location's history.
 
 h2. Introduction to SIMPLESEM
 
@@ -140,7 +140,7 @@ jump 8
 </code>
 </pre>
 
-pre.. $ simplesem -v sample_programs/gcd.txt
+pre.. $ simplesem --inspect-history sample_programs/gcd.txt
 input: 15
 input: 35
 5

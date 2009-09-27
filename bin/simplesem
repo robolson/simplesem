@@ -1,21 +1,4 @@
 #!/usr/bin/env ruby
-#= Overview
-#
-# Interpreter for the SIMPLESEM language
-#
-#= Usage
-#
-# simplesem [-t|-v] filename
-# 
-# Options:
-#   -h    Print this message
-#   -t    Print Data array on exit
-#   -v    Print Data array with change history on exit. Supersedes -t 
-#         if it is also specified.
-#
-
-require 'rdoc/usage'
-require 'getoptlong'
 
 # The gem packager will properly add the lib dir to LOAD_PATH when
 # executing the gem but load path manipulation is needed during development
@@ -23,38 +6,31 @@ unless $LOAD_PATH.include?(File.expand_path('../../lib', __FILE__))
   $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
 end
 
-require 'simplesem'   # must execute after manipulating the load path
+require 'simplesem'
+require 'trollop/trollop'
 
-opts = GetoptLong.new(
-  [ '-h', '--help', GetoptLong::NO_ARGUMENT ],
-  [ '-t', GetoptLong::NO_ARGUMENT ],
-  [ '-v', GetoptLong::NO_ARGUMENT ]
-)
+opts = Trollop::options do
+  version SimpleSem::VERSION
+  banner <<-EOS
+Interpreter for the SIMPLESEM language by Rob Olson
 
-verbosity = 0   # by default do not print what is in Data
+Usage: simplesem [options] filename
 
-opts.each do |opt, arg|
-  case opt
-  when '-h'
-    RDoc::usage
-  when '-t'
-    verbosity = 1
-  when '-v'
-    verbosity = 2
-  end
+Options:
+EOS
+
+  opt :inspect, "Print values in the data array on exit"
+  opt :inspect_history, "Print values in the data array with change history on exit"
+  conflicts :inspect, :inspect_history
 end
+Trollop::die "must specify a single filename" if ARGV.length != 1
 
-if ARGV.length != 1
-  puts "Missing filename argument (try --help)"
-  exit 0
-end
 
 ssp = SimpleSem::Program.new(ARGV.shift)
 ssp.run
 
-case verbosity
-when 1
+if opts[:inspect_history]
   puts "\nDATA: \n" + ssp.inspect_data
-when 2
+elsif opts[:inspect]
   puts "\nDATA: \n" + ssp.inspect_data_with_history
 end
