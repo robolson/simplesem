@@ -1,2 +1,1 @@
-dir = File.dirname(__FILE__)
-require "#{dir}/simplesem/simplesem_program"
+require 'simplesem/simplesem_program'

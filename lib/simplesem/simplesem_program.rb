@@ -1,9 +1,8 @@
-require 'rubygems'
 require 'treetop'
+require 'simplesem/arithmetic_node_classes'
 dir = File.dirname(__FILE__)
-require File.expand_path("#{dir}/arithmetic_node_classes")
-Treetop.load File.expand_path("#{dir}/arithmetic")
-Treetop.load File.expand_path("#{dir}/simple_sem")
+Treetop.load File.expand_path(File.join(dir, 'arithmetic'))
+Treetop.load File.expand_path(File.join(dir, 'simple_sem'))
 
 class ProgramHalt < Exception
 end

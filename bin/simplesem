@@ -14,12 +14,16 @@
 #         if it is also specified.
 #
 
-require 'rubygems'
 require 'rdoc/usage'
 require 'getoptlong'
 
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
-require 'simplesem'
+# The gem packager will properly add the lib dir to LOAD_PATH when
+# executing the gem but load path manipulation is needed during development
+unless $LOAD_PATH.include?(File.expand_path('../../lib', __FILE__))
+  $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
+end
+
+require 'simplesem'   # must execute after manipulating the load path
 
 opts = GetoptLong.new(
   [ '-h', '--help', GetoptLong::NO_ARGUMENT ],

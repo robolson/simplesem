@@ -1,7 +1,5 @@
-dir = File.dirname(__FILE__)
-require File.expand_path("#{dir}/test_helper")
-libdir = dir + "/../lib"
-require File.expand_path("#{libdir}/simplesem")
+require 'test_helper'
+require 'simplesem'
 
 class SimpleSemParserTest < Test::Unit::TestCase
   include ParserTestHelper

@@ -1,6 +1,5 @@
 require 'test/unit'
 require 'stringio'
-require 'rubygems'
 require 'treetop'
 
 module ParserTestHelper
