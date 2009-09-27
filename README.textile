@@ -8,23 +8,23 @@ Interpreter for the SIMPLESEM language.
 
 SIMPLESEM is used in the CS141 Programming Languages course taught by Professor "Shannon Tauro":http://www.ics.uci.edu/~stauro/ at UC Irvine. This Rubygem was created out of my desire to execute SIMPLESEM programs.
 
-This interpreter utilizes Nathan Sobo's "Treetop":http://github.com/nathansobo/treetop gem to create a parsing expression grammar for parsing SIMPLESEM commands.  
+This interpreter utilizes Nathan Sobo's "Treetop":http://github.com/nathansobo/treetop gem to create a parsing expression grammar for parsing SIMPLESEM commands.
 
 h2. Installation and Usage
 
 Install the simplesem gem with:
 
-  $ sudo gem install robolson-simplesem
+bc. $ sudo gem install robolson-simplesem
 
 Execute a SIMPLESEM program using the simplesem command. Pass the filename of the SIMLESEM source file as an argument.
 
-  $ simplesem simplesem_file.txt
+bc. $ simplesem simplesem_file.txt
 
 h3. Command Line Options
 
 The simplesem executable accepts a couple command line options which will display the values in the Data array at the time the program exits.
 
-  -h    Print help message
+pre.  -h    Print help message
   -t    Print Data array on exit
   -v    Print Data array with change history on exit. Supersedes -t if it is also specified.
 
@@ -40,11 +40,11 @@ The @set@ command is used to modify the value stored in a cell. It takes two par
 
 Evaluate the expression (4 * 2) and places the result into location 0:
 
-  set 0, 4 * 2
+bc. set 0, 4 * 2
 
 Assign the value stored at location 0 into location 2:
 
-  set 2, D[0]
+bc. set 2, D[0]
 
 h3. Input/Output with SET
 
@@ -52,11 +52,11 @@ The @set@ command is also used to print to the screen and to get input from the 
 
 Print the value stored at location 0:
 
-  set write, D[0]
+bc. set write, D[0]
 
 Get input from the user and store it at location 1:
 
-  set 0, read
+bc. set 0, read
 
 h3. JUMP
 
@@ -64,7 +64,7 @@ The @jump@ command performs and unconditional jump to the line number specified.
 
 Jump program execution to the address at location 0:
 
-  jump D[0]
+bc. jump D[0]
 
 h3. JUMPT
 
@@ -72,7 +72,7 @@ The @jumpt@ command (pronounced jump-true), is a conditional jump. It only jumps
 
 Jump to line 7 if the value at <notextile>D[1]</notextile> is equal to the value at <notextile>D[0]</notextile>:
 
-  jumpt 7, D[1] = D[0]
+bc. jumpt 7, D[1] = D[0]
 
 SIMPLESEM supports all the common comparison operators: >, <, >=, <=, !=, and =. Take note that the equality operator is a single '=' sign, not the usual '=='.
 
@@ -80,8 +80,8 @@ h3. Comments
 
 SIMPLESEM comments begin with two forward slashes. Everything on the line following @//@ is considered a comment and is ignored by the interpreter. *Important*: Comments still consume line numbers! Keep this in mind when writing jump statements.
 
-  // This is line number 0.
-  set write, "foo"  // a comment after a statement
+bc. // This is line number 0.
+    set write, "foo"  // a comment after a statement
 
 h2. Slightly More Advanced Features of SIMPLESEM
 
@@ -89,19 +89,19 @@ h3. Nested Data Lookups
 
 SIMPLESEM supports nesting expressions inside of the address location for accessing the data array. This statement looks up the value at location 0, adds 1 to it, then uses the result as the address of another data lookup. If <notextile>D[0]</notextile> contains the value 9--this statement will set location 5 with the value at location 10.
 
-  set 5, D[D[0]+1]
+bc. set 5, D[D[0]+1]
 
 h3. Indirect Addressing
 
 Assigns the value stored at location 15 into the cell whose address is the value stored at location 10:
 
-  set D[10], D[15]
+bc. set D[10], D[15]
 
 h3. Complex Math Expressions
 
 SIMPLESEM supports standard mathematical order of operations. The following statement sets location 1 to 14 as expected:
 
-  set 1, 2+3*4
+bc. set 1, 2+3*4
 
 h3. Using The Instruction Pointer Variable
 
@@ -140,15 +140,13 @@ jump 8
 </code>
 </pre>
 
-<pre>
-$ simplesem -v sample_programs/gcd.txt 
+pre.. $ simplesem -v sample_programs/gcd.txt
 input: 15
 input: 35
 5
 
-DATA: 
+DATA:
 0: [15, 10, 5]
 1: [35, 20, 5]
 2: [4]
-</pre>
 
