@@ -109,22 +109,18 @@ At any point you can use the @ip@ placeholder in your code and it will evaluate 
 
 The following program will output the text "hello world!" five times and then exit. It uses the @ip@ variable to jump execution back to the @set write@ statement.
 
-<pre>
-<code>
-set 0, 0
+<pre><code>set 0, 0
 set write, "hello world!"
 set 0, D[0]+1
 jumpt ip-3, D[0] < 5
 halt
-</code>
-</pre>
+</code></pre>
 
 h3. A Sample SIMPLESEM Program
 
 The following SIMPLESEM program calculates the "GCD":http://en.wikipedia.org/wiki/Greatest_common_divisor of two numbers. The program prompts the user to enter the two numbers when the program is executed. This program is also included in the @sample_programs@ folder.
 
-<pre><code>
-set 0, read               // first number 'n'
+<pre><code>set 0, read               // first number 'n'
 set 1, read               // second number 'm'
 set 2, ip + 1             // return pointer for call to GCD
 jump 8
@@ -139,8 +135,8 @@ jump 8
 </code></pre>
 
 Running the above program on the command line will give the following output:
-<pre>
-$ simplesem --inspect-history sample_programs/gcd.txt
+
+<pre>$ simplesem --inspect-history sample_programs/gcd.txt
 input: 15
 input: 35
 5
@@ -150,3 +146,4 @@ DATA:
 1: [35, 20, 5]
 2: [4]
 </pre>
+
