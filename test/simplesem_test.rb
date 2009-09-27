@@ -5,9 +5,13 @@ class SimpleSemParserTest < Test::Unit::TestCase
   include ParserTestHelper
   
   def setup
-    @parser = SimpleSemParser.new
-    @ssp = SimpleSemProgram.new
+    @parser = SimpleSem::SimpleSemParser.new
+    @ssp = SimpleSem::Program.new
     @ssp.data[0] = [1]
+  end
+
+  def test_version_constant_is_set
+    assert_not_nil SimpleSem::VERSION
   end
   
   def test_set_stmt_assign
@@ -129,7 +133,7 @@ class SimpleSemParserTest < Test::Unit::TestCase
   end
   
   def test_halt
-    assert_raise ProgramHalt do
+    assert_raise SimpleSem::ProgramHalt do
       parse('halt').execute(@ssp)
     end
   end

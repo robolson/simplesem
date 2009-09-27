@@ -1,117 +1,118 @@
-grammar SimpleSem
-  include Arithmetic
-  
-  rule statement
-    set_stmt / jump_stmt / jumpt_stmt / halt
-  end
-  
-  rule halt
-    'halt' {
-      def execute(env={})
-        raise ProgramHalt
-      end
-    }
-  end
-  
-  rule set_stmt
-    set_stmt_assign / set_stmt_write / set_stmt_read
-  end
+module SimpleSem
+  grammar SimpleSem
+    include Arithmetic
 
-  rule set_stmt_assign
-    'set' space loc:additive comma value:additive {
-      def execute(env)
-        evaled_loc = loc.eval(env)
-        evaled_value = value.eval(env)
-        if env.data[evaled_loc].nil?
-            env.data[evaled_loc] = Array[evaled_value]
-        else
-            env.data[evaled_loc] << evaled_value
+    rule statement
+      set_stmt / jump_stmt / jumpt_stmt / halt
+    end
+
+    rule halt
+      'halt' {
+        def execute(env={})
+          raise ProgramHalt
         end
-      end
-    }
-  end
-  
-  rule set_stmt_write
-    'set' space 'write' comma expression {
-      def execute(env)
-        puts expression.eval(env)
-      end
-    }
-    /
-    'set' space 'write' comma '"' string:(!'"' . )* '"' {
-      def execute(env)
-        puts string.text_value
-      end
-    }
-  end
-  
-  rule set_stmt_read
-    'set' space loc:additive comma 'read' {
-      def execute(env)
-        print "input: "
-        
-        evaled_loc = loc.eval(env)
-        input_value = $stdin.gets.strip.to_i
-        
-        if env.data[evaled_loc].nil?
-            env.data[evaled_loc] = Array[input_value]
-        else
-            env.data[evaled_loc] << input_value
+      }
+    end
+
+    rule set_stmt
+      set_stmt_assign / set_stmt_write / set_stmt_read
+    end
+
+    rule set_stmt_assign
+      'set' space loc:additive comma value:additive {
+        def execute(env)
+          evaled_loc = loc.eval(env)
+          evaled_value = value.eval(env)
+          if env.data[evaled_loc].nil?
+              env.data[evaled_loc] = Array[evaled_value]
+          else
+              env.data[evaled_loc] << evaled_value
+          end
         end
-      end  
-    }
-  end
-  
-  rule jump_stmt
-    'jump' space loc:additive {
-      def execute(env)
-        env.pc = loc.eval(env)
-      end
-    }
-  end
-  
-  rule jumpt_stmt
-    'jumpt' space loc:additive comma expression {
-      def execute(env)
-        if expression.eval(env)
+      }
+    end
+
+    rule set_stmt_write
+      'set' space 'write' comma expression {
+        def execute(env)
+          puts expression.eval(env)
+        end
+      }
+      /
+      'set' space 'write' comma '"' string:(!'"' . )* '"' {
+        def execute(env)
+          puts string.text_value
+        end
+      }
+    end
+
+    rule set_stmt_read
+      'set' space loc:additive comma 'read' {
+        def execute(env)
+          print "input: "
+
+          evaled_loc = loc.eval(env)
+          input_value = $stdin.gets.strip.to_i
+
+          if env.data[evaled_loc].nil?
+              env.data[evaled_loc] = Array[input_value]
+          else
+              env.data[evaled_loc] << input_value
+          end
+        end
+      }
+    end
+
+    rule jump_stmt
+      'jump' space loc:additive {
+        def execute(env)
           env.pc = loc.eval(env)
         end
-      end
-    }
+      }
+    end
+
+    rule jumpt_stmt
+      'jumpt' space loc:additive comma expression {
+        def execute(env)
+          if expression.eval(env)
+            env.pc = loc.eval(env)
+          end
+        end
+      }
+    end
+
+    rule primary
+      ip
+      /
+      data_lookup
+      /
+      number
+      /
+      '(' space expression space ')' {
+        def eval(env={})
+          expression.eval(env)
+        end
+      }
+    end
+
+    rule data_lookup
+      'D[' expr:additive ']' {
+        def eval(env)
+          env.data[expr.eval(env)].last
+        end
+      }
+    end
+
+    rule ip
+      'ip' {
+        def eval(env)
+          env.pc
+        end
+      }
+    end
+
+    rule comma
+      space ',' space
+    end
   end
-  
-  rule primary
-    ip
-    /
-    data_lookup
-    /
-    number
-    /
-    '(' space expression space ')' {
-      def eval(env={})
-        expression.eval(env)
-      end
-    }
-  end
-  
-  rule data_lookup
-    'D[' expr:additive ']' {
-      def eval(env)
-        env.data[expr.eval(env)].last
-      end
-    }
-  end
-  
-  rule ip
-    'ip' {
-      def eval(env)
-        env.pc
-      end
-    }
-  end
-  
-  rule comma
-    space ',' space
-  end
-  
 end
