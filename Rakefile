@@ -1,7 +1,7 @@
 require 'rake'
 require 'echoe'
 
-Echoe.new('simplesem', '0.1.3') do |p|
+Echoe.new('simplesem', '0.1.4') do |p|
   p.summary = "SIMPLESEM Interpreter"
   p.description = "Interpreter for parsing and executing SIMPLESEM programs"
   p.url = "http://github.com/robolson/simplesem"
